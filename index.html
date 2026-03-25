@@ -142,12 +142,16 @@
             flex-shrink: 0;
         }
 
-        details[open] .phase-summary::after {
+        details.is-open .phase-summary::after {
             transform: rotate(180deg);
         }
 
         .phase-content {
             padding: 0 2rem 2rem;
+        }
+
+        details.card {
+            scroll-margin-top: 1.25rem;
         }
 
         .phase-badge {
@@ -727,18 +731,66 @@ classDiagram
     <script>
         const phaseAccordions = document.querySelectorAll('details[data-accordion-group]');
 
-        phaseAccordions.forEach((accordion) => {
-            accordion.addEventListener('toggle', () => {
-                if (!accordion.open) {
+        function animateClose(accordion) {
+            return new Promise(resolve => {
+                const content = accordion.querySelector('.phase-content');
+                if (!accordion.open) { resolve(); return; }
+
+                accordion.classList.remove('is-open');
+                content.style.overflow = 'hidden';
+                content.style.height = content.scrollHeight + 'px';
+                content.offsetHeight; // force reflow
+                content.style.transition = 'height 0.3s ease';
+                content.style.height = '0';
+
+                content.addEventListener('transitionend', () => {
+                    accordion.open = false;
+                    content.style.height = '';
+                    content.style.overflow = '';
+                    content.style.transition = '';
+                    resolve();
+                }, { once: true });
+            });
+        }
+
+        function animateOpen(accordion) {
+            accordion.open = true;
+            accordion.classList.add('is-open');
+
+            const content = accordion.querySelector('.phase-content');
+            const targetHeight = content.scrollHeight;
+            content.style.overflow = 'hidden';
+            content.style.height = '0';
+            content.offsetHeight; // force reflow
+            content.style.transition = 'height 0.3s ease';
+            content.style.height = targetHeight + 'px';
+
+            content.addEventListener('transitionend', () => {
+                content.style.height = '';
+                content.style.overflow = '';
+                content.style.transition = '';
+            }, { once: true });
+        }
+
+        phaseAccordions.forEach(accordion => {
+            if (accordion.open) accordion.classList.add('is-open');
+
+            accordion.querySelector('.phase-summary').addEventListener('click', e => {
+                e.preventDefault();
+
+                if (accordion.open) {
+                    animateClose(accordion);
                     return;
                 }
 
                 const group = accordion.dataset.accordionGroup;
+                const toClose = [...phaseAccordions].filter(
+                    a => a !== accordion && a.dataset.accordionGroup === group && a.open
+                );
 
-                phaseAccordions.forEach((otherAccordion) => {
-                    if (otherAccordion !== accordion && otherAccordion.dataset.accordionGroup === group) {
-                        otherAccordion.open = false;
-                    }
+                Promise.all(toClose.map(animateClose)).then(() => {
+                    accordion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    animateOpen(accordion);
                 });
             });
         });
