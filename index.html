@@ -497,7 +497,8 @@
                             <li><code>boolean estaViu()</code></li>
                             <li><code>void mostrarInformacio()</code></li>
                             <li><code>int calcularDany()</code> <em>(retornarà inicialment el valor del nivell)</em></li>
-                            <li><code>void atacar(Enemic enemic)</code> <em>(ha de calcular el dany, aplicar-lo a l’enemic i mostrar un missatge)</em></li>
+                            <li><code>boolean rebreDany(int dany)</code> <em>(retornarà cert si ha mort en rebre l'atac)</em></li>
+                            <li><code>void atacar(Personatge enemic)</code> <em>(ha de calcular el dany, aplicar-lo a l’enemic i mostrar un missatge)</em></li>
                         </ul>
                     </li>
                 </ul>
@@ -569,22 +570,6 @@
             <summary class="phase-summary">
                 <div class="phase-heading">
                     <span class="phase-badge">FASE 7</span>
-                    <h2>Implementació de la classe Enemic</h2>
-                </div>
-            </summary>
-            <div class="phase-content">
-                <p class="phase-intro">L’enemic rebrà el dany de l’equip i t’ajudarà a provar tot el sistema.</p>
-                <ul>
-                    <li><strong>Atributs:</strong> <code>nom</code>, <code>vida</code></li>
-                    <li><strong>Mètodes:</strong> <code>rebreDany(int dany)</code> (redueix la vida sense baixar de 0), <code>estaViu()</code>, <code>mostrarEstat()</code></li>
-                </ul>
-            </div>
-        </details>
-
-        <details class="card" data-accordion-group="phases">
-            <summary class="phase-summary">
-                <div class="phase-heading">
-                    <span class="phase-badge">FASE 8</span>
                     <h2>Programa Principal</h2>
                 </div>
             </summary>
@@ -612,7 +597,7 @@ Vida restant del drac: 115</code></pre>
         <details class="card" data-accordion-group="phases">
             <summary class="phase-summary">
                 <div class="phase-heading">
-                    <span class="phase-badge">FASE 9</span>
+                    <span class="phase-badge">FASE 8</span>
                     <h2>Preguntes de reflexió</h2>
                 </div>
             </summary>
